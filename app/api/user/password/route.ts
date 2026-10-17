@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { invalidateUserSessions } from '@/lib/session-invalidation';
 import * as bcrypt from 'bcryptjs';
 import { updatePasswordSchema, validateRequest } from '@/lib/validations';
 import { apiResponse, handleApiError, parseRequestBody, withAuth } from '@/lib/api-utils';
@@ -38,11 +39,15 @@ export const PUT = withAuth(async (request, session) => {
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update password
-    await prisma.user.update({
-      where: { id: session.user.id },
-      data: { password: hashedPassword },
-    });
+    // Update password and sign out every other device and browser. A change
+    // made from the app keeps that app's own session.
+    await invalidateUserSessions(
+      session.user.id,
+      hashedPassword,
+      session.authMethod === 'device' && session.deviceSessionId
+        ? { keepDeviceSessionId: session.deviceSessionId }
+        : {}
+    );
 
     return apiResponse.message('Password changed successfully');
   } catch (error) {

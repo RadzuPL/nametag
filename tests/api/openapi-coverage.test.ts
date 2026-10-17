@@ -75,7 +75,7 @@ const routes: RouteFile[] = collectRouteFiles(API_ROOT).map((file) => {
       ),
     ],
     // Routes opted out of bearer-token auth via withAuth's options.
-    sessionOnly: /allowApiToken:\s*false/.test(source),
+    sessionOnly: /allowApiTokens:\s*false/.test(source),
   };
 });
 
@@ -145,9 +145,12 @@ describe('OpenAPI coverage', () => {
         const acceptsToken = security.some((scheme) => 'apiToken' in scheme);
         if (acceptsToken) {
           wrong.push(
-            `${method.toUpperCase()} ${route.path} uses allowApiToken: false ` +
+            `${method.toUpperCase()} ${route.path} uses allowApiTokens: false ` +
               'but the spec advertises apiToken'
           );
+        }
+        if (!security.some((scheme) => 'deviceSession' in scheme)) {
+          wrong.push(`${method.toUpperCase()} ${route.path} does not advertise deviceSession`);
         }
       }
     }
@@ -166,8 +169,13 @@ describe('OpenAPI coverage', () => {
       const entry = spec.paths[route.path];
       if (!entry) continue;
 
+      // A route that rejects everything but a native app device session in its
+      // own handler (logout) honestly advertises deviceSession alone.
+      const deviceOnly = /authMethod !== 'device'/.test(route.source);
+
       for (const method of route.methods) {
         const security = entry[method]?.security;
+        if (deviceOnly && security?.every((scheme) => 'deviceSession' in scheme)) continue;
         if (!security) {
           wrong.push(`${method.toUpperCase()} ${route.path} declares no security`);
           continue;
@@ -177,6 +185,9 @@ describe('OpenAPI coverage', () => {
             `${method.toUpperCase()} ${route.path} accepts API tokens but the ` +
               'spec only advertises session'
           );
+        }
+        if (!security.some((scheme) => 'deviceSession' in scheme)) {
+          wrong.push(`${method.toUpperCase()} ${route.path} does not advertise deviceSession`);
         }
       }
     }

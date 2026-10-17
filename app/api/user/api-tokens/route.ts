@@ -7,7 +7,7 @@ import {
 import { createApiTokenSchema, validateRequest } from '@/lib/validations';
 import { createApiToken, listApiTokens } from '@/lib/api-tokens';
 
-// Token management is intentionally session-only (allowApiToken: false) so an
+// Token management is intentionally session-only (allowApiTokens: false) so an
 // API token can never be used to mint or enumerate other tokens.
 
 export const GET = withAuth(
@@ -19,12 +19,21 @@ export const GET = withAuth(
       return handleApiError(error, 'api-tokens-list');
     }
   },
-  { allowApiToken: false }
+  { allowApiTokens: false }
 );
 
 export const POST = withAuth(
   async (request, session) => {
     try {
+      // A short-lived device access token must not mint long-lived tokens.
+      if (session.authMethod === 'device') {
+        return apiResponse.coded(
+          403,
+          'interactive_session_required',
+          'Creating API tokens requires signing in on the web'
+        );
+      }
+
       const body = await parseRequestBody(request);
       const validation = validateRequest(createApiTokenSchema, body);
 
@@ -47,5 +56,5 @@ export const POST = withAuth(
       return handleApiError(error, 'api-tokens-create');
     }
   },
-  { allowApiToken: false }
+  { allowApiTokens: false }
 );
