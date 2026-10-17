@@ -84,6 +84,7 @@ describe('OpenAPI Specification', () => {
     expect(spec.paths['/api/openapi.json'].get.security).toBeUndefined();
     expect(spec.paths['/api/docs'].get.security).toBeUndefined();
     expect(spec.paths['/api/health'].get.security).toBeUndefined();
+    expect(spec.paths['/api/server-info'].get.security).toBeUndefined();
   });
 
   it('documents every 400 code the endpoint create and update routes return', () => {
