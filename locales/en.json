@@ -2179,5 +2179,11 @@
       "dismiss": "Not now",
       "unsupported": "Your browser may be able to install this from its own menu. Look for Add to Home Screen, Install, or Add to Dock."
     }
+  },
+  "nativeAuth": {
+    "expired": {
+      "title": "Sign-in link expired",
+      "body": "This sign-in link has expired. Go back to the app and try again."
+    }
   }
 }

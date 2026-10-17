@@ -2179,5 +2179,11 @@
       "dismiss": "Jetzt nicht",
       "unsupported": "Dein Browser kann die App möglicherweise über sein eigenes Menü installieren. Suche nach «Zum Home-Bildschirm», «Installieren» oder «Zum Dock hinzufügen»."
     }
+  },
+  "nativeAuth": {
+    "expired": {
+      "title": "Anmeldelink abgelaufen",
+      "body": "Dieser Anmeldelink ist abgelaufen. Gehe zurück zur App und versuche es erneut."
+    }
   }
 }

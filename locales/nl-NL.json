@@ -2179,5 +2179,11 @@
       "dismiss": "Niet nu",
       "unsupported": "Je browser kan de app misschien installeren via het eigen menu. Zoek naar «Zet op beginscherm», «Installeren» of «Voeg toe aan Dock»."
     }
+  },
+  "nativeAuth": {
+    "expired": {
+      "title": "Inloglink verlopen",
+      "body": "Deze inloglink is verlopen. Ga terug naar de app en probeer het opnieuw."
+    }
   }
 }

@@ -2179,5 +2179,11 @@
       "dismiss": "Ikke nå",
       "unsupported": "Nettleseren din kan kanskje installere appen fra sin egen meny. Se etter Legg til på Hjem-skjerm, Installer eller Legg til i Dock."
     }
+  },
+  "nativeAuth": {
+    "expired": {
+      "title": "Innloggingslenken er utløpt",
+      "body": "Denne innloggingslenken er utløpt. Gå tilbake til appen og prøv igjen."
+    }
   }
 }

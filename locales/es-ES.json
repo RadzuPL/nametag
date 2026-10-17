@@ -2179,5 +2179,11 @@
       "dismiss": "Ahora no",
       "unsupported": "Tu navegador puede permitir instalarla desde su propio menú. Busca Añadir a pantalla de inicio, Instalar o Añadir al Dock."
     }
+  },
+  "nativeAuth": {
+    "expired": {
+      "title": "Enlace de inicio de sesión caducado",
+      "body": "Este enlace de inicio de sesión ha caducado. Vuelve a la app e inténtalo de nuevo."
+    }
   }
 }
