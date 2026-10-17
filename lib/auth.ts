@@ -370,6 +370,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   pages: {
     signIn: '/login',
+    // Sign-in rejections land on /login too, so native sign-ins can be reported.
+    error: '/login',
   },
   session: {
     strategy: 'jwt',

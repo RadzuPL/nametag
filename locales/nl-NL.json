@@ -1845,6 +1845,7 @@
   "errors": {
     "auth": {
       "invalidCredentials": "Ongeldig e-mailadres of wachtwoord",
+      "signInFailed": "Inloggen is niet gelukt. Probeer het opnieuw.",
       "emailNotVerified": "Verifieer uw e-mail voordat u inlogt",
       "accountLocked": "Account vergrendeld vanwege te veel mislukte inlogpogingen. Neem contact op met ondersteuning.",
       "sessionExpired": "Uw sessie is verlopen. Log opnieuw in.",

@@ -1845,6 +1845,7 @@
   "errors": {
     "auth": {
       "invalidCredentials": "Ugyldig e-post eller passord",
+      "signInFailed": "Innloggingen mislyktes. Prøv igjen.",
       "emailNotVerified": "Bekreft e-posten din før du logger inn",
       "accountLocked": "Kontoen er låst på grunn av flere mislykkede innloggingsforsøk. Kontakt kundestøtte.",
       "sessionExpired": "Økten din har utløpt. Logg inn på nytt.",

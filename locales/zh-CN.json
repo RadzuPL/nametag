@@ -1845,6 +1845,7 @@
   "errors": {
     "auth": {
       "invalidCredentials": "无效的邮箱或密码",
+      "signInFailed": "登录失败，请重试。",
       "emailNotVerified": "请在登录前验证您的邮箱",
       "accountLocked": "由于登录尝试失败多次，账户已被锁定。请联系支持团队。",
       "sessionExpired": "您的会话已过期。请重新登录。",

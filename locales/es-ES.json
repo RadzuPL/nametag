@@ -1845,6 +1845,7 @@
   "errors": {
     "auth": {
       "invalidCredentials": "Correo electrónico o contraseña inválidos",
+      "signInFailed": "No se pudo iniciar sesión. Inténtalo de nuevo.",
       "emailNotVerified": "Por favor, verifica tu correo electrónico antes de iniciar sesión",
       "accountLocked": "Cuenta bloqueada debido a múltiples intentos fallidos de inicio de sesión. Por favor, contacta al soporte.",
       "sessionExpired": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",

@@ -11,7 +11,11 @@ import { GoogleSignInButton } from '@/components/GoogleSignInButton';
 import { OidcSignInButton } from '@/components/OidcSignInButton';
 import { fetchAvailableProviders } from '@/lib/client-features';
 
-export default function LoginForm() {
+interface LoginFormProps {
+  initialError?: boolean;
+}
+
+export default function LoginForm({ initialError = false }: LoginFormProps) {
   const router = useRouter();
   const t = useTranslations('auth');
   const tCommon = useTranslations('common');
@@ -19,7 +23,7 @@ export default function LoginForm() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(initialError ? tErrors('auth.signInFailed') : '');
   const [isLoading, setIsLoading] = useState(false);
   const [isUnverified, setIsUnverified] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);

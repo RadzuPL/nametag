@@ -45,13 +45,14 @@ describe('/login with a pending native sign-in', () => {
 
   it('renders the normal form for a web user with an error and no pending sign-in', async () => {
     const result = await LoginPage({ searchParams: Promise.resolve({ error: 'AccessDenied' }) });
-    expect(result).toBeTruthy();
+    expect(result.props.initialError).toBe(true);
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
   it('renders the normal form when a pending sign-in exists but there is no error', async () => {
     mocks.store.set(PENDING_COOKIE, pendingValue());
-    await LoginPage({ searchParams: Promise.resolve({}) });
+    const result = await LoginPage({ searchParams: Promise.resolve({}) });
+    expect(result.props.initialError).toBe(false);
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
 

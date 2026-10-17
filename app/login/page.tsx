@@ -20,5 +20,5 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       redirect(COMPLETE_PATH);
     }
   }
-  return <LoginForm />;
+  return <LoginForm initialError={Boolean(error)} />;
 }

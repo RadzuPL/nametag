@@ -1845,6 +1845,7 @@
   "errors": {
     "auth": {
       "invalidCredentials": "E-mail ou mot de passe invalide",
+      "signInFailed": "La connexion a échoué. Veuillez réessayer.",
       "emailNotVerified": "Vérifiez votre e-mail avant de vous connecter",
       "accountLocked": "Compte verrouillé après plusieurs tentatives de connexion échouées. Contactez le support.",
       "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
