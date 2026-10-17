@@ -1,11 +1,13 @@
 import { cookies } from 'next/headers';
+import { env } from '@/lib/env';
 import { withLogging } from '@/lib/api-utils';
 import { createModuleLogger } from '@/lib/logger';
 import { issueNativeAuthCode } from '@/lib/native-auth/codes';
-import { endWebSession, getWebSessionUserId } from '@/lib/native-auth/web-session';
+import { decodeWebSessionToken, endWebSession } from '@/lib/native-auth/web-session';
 import {
   EXPIRED_PATH,
   PENDING_COOKIE,
+  PENDING_TTL_MS,
   REASON_COOKIE,
   appRedirect,
   parseReason,
@@ -28,10 +30,20 @@ export const GET = withLogging(async function GET(request: Request) {
   store.delete(REASON_COOKIE);
 
   if (!pending) {
-    return Response.redirect(new URL(EXPIRED_PATH, request.url), 302);
+    return Response.redirect(new URL(EXPIRED_PATH, env.NEXTAUTH_URL), 302);
   }
 
-  const userId = await getWebSessionUserId();
+  // This route is a cross-site provider redirect, so it cannot use withAuth
+  // (no same-origin check is possible). The gate is the signed, SameSite=Lax
+  // pending cookie verified above. The session must also have been created by
+  // this flow, so a pre-existing web session in a shared cookie jar is never
+  // turned into a code: its sign-in time must not predate the pending cookie.
+  const token = await decodeWebSessionToken(request);
+  const flowStart = Math.floor((pending.exp - PENDING_TTL_MS) / 1000);
+  const userId =
+    token && typeof token.id === 'string' && typeof token.authTime === 'number' && token.authTime >= flowStart
+      ? token.id
+      : null;
   if (!userId) {
     const error = reason ?? 'sign_in_failed';
     log.info({ event: 'auth.native.browser.failed', provider: pending.provider, reason: error }, 'Native SSO failed');

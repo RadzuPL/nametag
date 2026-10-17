@@ -5,32 +5,33 @@ const mocks = vi.hoisted(() => ({
   blacklistToken: vi.fn(),
   deleted: [] as string[],
   names: [] as string[],
-  auth: vi.fn(),
+  set: [] as { name: string; value: string; options: Record<string, unknown> }[],
 }));
 
 vi.mock('next/headers', () => ({
   cookies: async () => ({
     getAll: () => mocks.names.map((name) => ({ name, value: 'v' })),
-    delete: (name: string) => {
+    set: (name: string, value: string, options: Record<string, unknown>) => {
       mocks.deleted.push(name);
+      mocks.set.push({ name, value, options });
     },
   }),
 }));
 vi.mock('next-auth/jwt', () => ({ getToken: mocks.getToken }));
 vi.mock('@/lib/token-blacklist', () => ({ blacklistToken: mocks.blacklistToken }));
-vi.mock('@/lib/auth', () => ({ auth: mocks.auth }));
-vi.mock('@/lib/env', () => ({ env: { NEXTAUTH_SECRET: 's'.repeat(32) } }));
+vi.mock('@/lib/env', () => ({ env: { NEXTAUTH_SECRET: 's'.repeat(32), NEXTAUTH_URL: 'https://nametag.example' } }));
 vi.mock('@/lib/logger', () => {
   const log = { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() };
   return { logger: log, createModuleLogger: vi.fn(() => log) };
 });
 
-import { endWebSession, getWebSessionUserId } from '@/lib/native-auth/web-session';
+import { endWebSession } from '@/lib/native-auth/web-session';
 
 describe('endWebSession', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.deleted = [];
+    mocks.set = [];
     mocks.names = ['authjs.session-token', 'authjs.session-token.0', 'other'];
   });
 
@@ -48,21 +49,21 @@ describe('endWebSession', () => {
     expect(mocks.deleted).toHaveLength(2);
   });
 
-  it('uses the secure cookie name when the secure cookie is present', async () => {
-    mocks.names = ['__Secure-authjs.session-token'];
+  it('derives secureCookie from NEXTAUTH_URL', async () => {
     mocks.getToken.mockResolvedValue(null);
     await endWebSession(new Request('https://nametag.example/x'));
     expect(mocks.getToken).toHaveBeenCalledWith(expect.objectContaining({ secureCookie: true }));
     expect(mocks.blacklistToken).not.toHaveBeenCalled();
-    expect(mocks.deleted).toEqual(['__Secure-authjs.session-token']);
   });
-});
 
-describe('getWebSessionUserId', () => {
-  it('returns the signed-in user id, or null without a session', async () => {
-    mocks.auth.mockResolvedValueOnce({ user: { id: 'u1' } });
-    expect(await getWebSessionUserId()).toBe('u1');
-    mocks.auth.mockResolvedValueOnce(null);
-    expect(await getWebSessionUserId()).toBeNull();
+  it('expires each session cookie with attributes that match how it was set', async () => {
+    mocks.names = ['__Secure-authjs.session-token', '__Secure-authjs.session-token.0', 'authjs.session-token', 'other'];
+    mocks.getToken.mockResolvedValue(null);
+    await endWebSession(new Request('https://nametag.example/x'));
+    expect(mocks.set.map((c) => [c.name, c.value, c.options.secure, c.options.path, c.options.maxAge])).toEqual([
+      ['__Secure-authjs.session-token', '', true, '/', 0],
+      ['__Secure-authjs.session-token.0', '', true, '/', 0],
+      ['authjs.session-token', '', false, '/', 0],
+    ]);
   });
 });

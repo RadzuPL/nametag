@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { signIn } from '@/lib/auth';
+import { env } from '@/lib/env';
 import { withLogging } from '@/lib/api-utils';
 import { createModuleLogger } from '@/lib/logger';
 import { getLoginProviders } from '@/lib/server-info';
@@ -28,7 +29,7 @@ export const GET = withLogging(async function GET(request: Request) {
   const query = Object.fromEntries(url.searchParams);
 
   if (!query.state || !STATE_PATTERN.test(query.state)) {
-    return Response.redirect(new URL(EXPIRED_PATH, url), 302);
+    return Response.redirect(new URL(EXPIRED_PATH, env.NEXTAUTH_URL), 302);
   }
   const state = query.state;
 

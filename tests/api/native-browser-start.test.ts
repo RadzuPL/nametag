@@ -23,7 +23,7 @@ const STATE = 'abcdefghijklmnop';
 const CHALLENGE = 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM';
 
 function start(params: Record<string, string>) {
-  const url = new URL('https://nametag.example/api/auth/native/browser/start');
+  const url = new URL('http://0.0.0.0:3000/api/auth/native/browser/start');
   const defaults: Record<string, string> = {
     provider: 'oidc',
     state: STATE,
