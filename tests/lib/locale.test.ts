@@ -59,6 +59,10 @@ describe('Locale Utilities', () => {
       expect(isSupportedLocale('fr-FR')).toBe(true);
     });
 
+    it('should return true for "pl-PL"', () => {
+      expect(isSupportedLocale('pl-PL')).toBe(true);
+    });
+
     it('should return false for unsupported locales', () => {
       expect(isSupportedLocale('pt-BR')).toBe(false);
       expect(isSupportedLocale('pt')).toBe(false);
@@ -76,6 +80,7 @@ describe('Locale Utilities', () => {
       expect(normalizeLocale('ru-RU')).toBe('ru-RU');
       expect(normalizeLocale('nl-NL')).toBe('nl-NL');
       expect(normalizeLocale('fr-FR')).toBe('fr-FR');
+      expect(normalizeLocale('pl-PL')).toBe('pl-PL');
     });
 
     it('should map "es" to "es-ES"', () => {
@@ -116,6 +121,10 @@ describe('Locale Utilities', () => {
 
     it('should map "fr" to "fr-FR"', () => {
       expect(normalizeLocale('fr')).toBe('fr-FR');
+    });
+
+    it('should map "pl" to "pl-PL"', () => {
+      expect(normalizeLocale('pl')).toBe('pl-PL');
     });
 
     it('should default to "en" for unsupported locales', () => {
@@ -342,6 +351,17 @@ describe('Locale Utilities', () => {
       const locale = await detectBrowserLocale();
 
       expect(locale).toBe('nb-NO');
+    });
+
+    it('should map "pl" to "pl-PL"', async () => {
+      const { headers } = await import('next/headers');
+      vi.mocked(headers).mockResolvedValue({
+        get: vi.fn().mockReturnValue('pl,pl-PL;q=0.9,en;q=0.8'),
+      } as any);
+
+      const locale = await detectBrowserLocale();
+
+      expect(locale).toBe('pl-PL');
     });
 
     it('should detect German from Accept-Language header', async () => {

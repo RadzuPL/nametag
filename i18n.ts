@@ -73,6 +73,10 @@ export default getRequestConfig(async () => {
             locale = 'fr-FR';
             break;
           }
+          if (languageCode === 'pl') {
+            locale = 'pl-PL';
+            break;
+          }
         }
       }
     }

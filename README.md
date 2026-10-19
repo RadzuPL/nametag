@@ -68,7 +68,7 @@ _Relationships page_
 - Bulk operations (delete, group assignment, relationships)
 - Messaging app quick links (WhatsApp, Signal, Telegram, and more)
 - Full dark and light theme support
-- Multiple languages (English, Spanish, Japanese, Norwegian, German, Chinese, Italian, Russian, Dutch)
+- Multiple languages (English, Spanish, Japanese, Norwegian, German, Chinese, Italian, Russian, Dutch, French, Polish)
 - Mobile-responsive design
 - Multi-platform Docker support (AMD64 and ARM64)
 
