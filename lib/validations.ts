@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { PREDEFINED_DATE_TYPES } from './important-date-types';
+import { validationFailed } from './api-errors';
 
 // ============================================
 // Common schemas
@@ -750,18 +751,7 @@ export function validateRequest<T>(
   const result = schema.safeParse(data);
 
   if (!result.success) {
-    const errors = result.error.issues.map((issue) => ({
-      field: issue.path.join('.'),
-      message: issue.message,
-    }));
-
-    return {
-      success: false,
-      response: NextResponse.json(
-        { error: 'Validation failed', details: errors },
-        { status: 400 }
-      ),
-    };
+    return { success: false, response: validationFailed(result.error.issues) };
   }
 
   return { success: true, data: result.data };
