@@ -1846,6 +1846,7 @@
   "errors": {
     "auth": {
       "invalidCredentials": "Nieprawidłowy adres e-mail lub hasło",
+      "signInFailed": "Logowanie nie powiodło się. Spróbuj ponownie.",
       "emailNotVerified": "Zweryfikuj swój adres e-mail przed zalogowaniem",
       "accountLocked": "Konto zostało zablokowane z powodu wielu nieudanych prób logowania. Skontaktuj się z pomocą techniczną.",
       "sessionExpired": "Twoja sesja wygasła. Zaloguj się ponownie.",
@@ -2179,6 +2180,12 @@
       "iosStep3": "Stuknij Dodaj",
       "dismiss": "Nie teraz",
       "unsupported": "Twoja przeglądarka może pozwolić na instalację z własnego menu. Poszukaj opcji Dodaj do ekranu głównego, Zainstaluj lub Dodaj do Docka."
+    }
+  },
+  "nativeAuth": {
+    "expired": {
+      "title": "Link do logowania wygasł",
+      "body": "Ten link do logowania wygasł. Wróć do aplikacji i spróbuj ponownie."
     }
   }
 }
