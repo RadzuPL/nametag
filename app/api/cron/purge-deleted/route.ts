@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { apiError } from '@/lib/api-errors';
 import { prismaIncludingDeleted, prisma } from '@/lib/prisma';
 import { env } from '@/lib/env';
 import { handleApiError, withLogging } from '@/lib/api-utils';
@@ -7,6 +8,7 @@ import { hasValidBearerSecret } from '@/lib/shared-secret';
 import { logger, securityLogger } from '@/lib/logger';
 import { deletePersonPhotos } from '@/lib/photo-storage';
 import { deleteIdleDeviceSessions } from '@/lib/native-auth/sessions';
+import { deleteExpiredNativeAuthCodes } from '@/lib/native-auth/codes';
 
 const RETENTION_DAYS = 30;
 
@@ -22,7 +24,7 @@ export const GET = withLogging(async function GET(request: Request) {
       securityLogger.authFailure(resolveTrustedClientIp(request) ?? 'unknown', 'Invalid cron secret', {
         endpoint: 'purge-deleted',
       });
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('unauthorized', 'Unauthorized');
     }
 
     // Log cron job start
@@ -47,6 +49,7 @@ export const GET = withLogging(async function GET(request: Request) {
       relationshipTypes: 0,
       people: 0,
       deviceSessions: 0,
+      nativeAuthCodes: 0,
     };
 
     // 1. Purge ImportantDates that are soft-deleted past retention
@@ -173,6 +176,9 @@ export const GET = withLogging(async function GET(request: Request) {
     // 10. Delete native app sessions idle past their window
     const deviceSessionsResult = await deleteIdleDeviceSessions(new Date());
     purged.deviceSessions = deviceSessionsResult;
+
+    // 11. Delete expired single-use native sign-in codes
+    purged.nativeAuthCodes = await deleteExpiredNativeAuthCodes(new Date());
 
     const result = {
       success: true,
