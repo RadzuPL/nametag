@@ -62,10 +62,12 @@ describe('TrashManager', () => {
 
     expect(await screen.findByText('Jan Kowalski')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: /^Relationships\b/ }));
+    // The tab buttons carry a count badge once the counts load, so their
+    // accessible name is e.g. "Relationships1" (or just "Relationships" before).
+    await user.click(screen.getByRole('button', { name: /^Relationships\d*$/ }));
     expect(await screen.findByText('Anna Nowak - Friend - Piotr')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: /^Important Dates\b/ }));
+    await user.click(screen.getByRole('button', { name: /^Important Dates\d*$/ }));
     expect(await screen.findByText(/^Birthday \(.+\) for Ewa Zielona$/)).toBeInTheDocument();
   });
 });
